@@ -45,7 +45,7 @@
         <!-- Div sekcija za POST formu za novosti -->
 
         <div id="novosti_post">
-            <input type="text" name="naslov_novosti" placeholder="Unesite naslov novosti">
+            <input type="text" name="naslov_novosti" id="naslov_novosti" placeholder="Unesite naslov novosti">
             <br>
             <textarea name="tekst_novosti" id="tekst_novosti" cols="30" rows="10" placeholder="Unesite tekst novosti"></textarea>
             <br>
@@ -83,7 +83,7 @@
 
         <div id="novosti_put">
             <input type="text" name="id_novosti" id="id_novosti">
-            <input type="text" name="naslov_novosti_put" placeholder="Unesite novi naslov novosti">
+            <input type="text" name="naslov_novosti_put" id="naslov_novosti_put" placeholder="Unesite novi naslov novosti">
             <br>
             <textarea name="tekst_novosti_put" id="tekst_novosti_put" cols="30" rows="10" placeholder="Unesite novi tekst novosti"></textarea>
             <br>
@@ -171,7 +171,6 @@
                         document.getElementById(nizBlokova[1]).style.display="block";
                     }
                 }
-                
                 break;
             case "put":
             // u slučaju da odaberemo put, sakrićemo sve prethodno prikazane div-ove
@@ -287,7 +286,39 @@
                     }
                     break;
                 case "put":
-                    //kod za bonus poene
+                    if (tabela == "radio_novosti") {
+                        var id_value = document.getElementById("id_novosti").value;
+                        var title_value = document.getElementById("naslov_novosti_put").value;
+                        var text_value = document.getElementById("tekst_novosti_put").value;
+                        var category_value = document.getElementById("kategorija_odabir_put").value;
+                        $.ajax({
+                            url: "http://localhost/ITEH/rest/api/novosti/" + id_value,
+                            type: 'PUT',
+                            data: JSON.stringify
+                            ({
+                                "naslov": title_value,
+                                "tekst" : text_value,
+                                "kategorija_id" : category_value
+                            }),
+                            success: function(data) {
+                                alert("Odgovor od servera> "+data['poruka']);
+                            }
+                        });
+                    } else {
+                        var category_id = document.getElementById("id_kategorije").value;
+                        var category_title = document.getElementById("kategorija_naziv_put").value;
+                        $.ajax({
+                            url: "http://localhost/ITEH/rest/api/kategorije/" + category_id,
+                            type: 'PUT',
+                            data: JSON.stringify
+                            ({
+                                "kategorija" : category_title
+                            }),
+                            success: function(data) {
+                                alert("Odgovor od servera> "+data['poruka']);
+                            }
+                        });
+                    }
                     break;
                 case "delete":
                     var value = document.getElementById("brisanje").value;
